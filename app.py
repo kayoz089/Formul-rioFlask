@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, send_file
 import sqlite3
 
 
@@ -12,13 +12,12 @@ def tabelas():
             nome TEXT NOT NULL,
             senha TEXT NOT NULL
         )
-''')
-    
+    ''')
+
     conn.commit()
     conn.close()
 
 
-# adicionando logins
 def adicionar(nome, senha):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
@@ -29,7 +28,6 @@ def adicionar(nome, senha):
     conn.close()
 
 
-# iniciando o flask
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
@@ -38,8 +36,21 @@ def index():
         nome = request.form['nome']
         senha = request.form['senha']
         adicionar(nome, senha)
+        return redirect(url_for('index'))
     
     return render_template("index.html")
+
+
+@app.route("/dashboard")
+def dashboard():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nome, senha FROM logins")
+    logins = cursor.fetchall()
+    conn.close()
+
+    return render_template("dashboard.html", logins=logins)
+
 
 if __name__ == "__main__":
     tabelas()  

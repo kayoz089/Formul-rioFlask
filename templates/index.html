@@ -9,12 +9,14 @@
 <body>
 
     <div class="card">
+
         <h1>Log in</h1>
         <form method="post">
             <input type="text" name="nome" id="nome" placeholder="Nome:"> <br>
             <input type="password" name="senha" id="senha" placeholder="Senha:"> <br>
             <button type="submit">Enviar </button>
-        </form>
+
+            <a href="{{ url_for('dashboard') }}" class="button-link" target="_blank">Ver Cadastros</a>
     </div>
 
 </body>
